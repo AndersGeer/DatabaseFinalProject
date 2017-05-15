@@ -22,6 +22,9 @@ public class main {
 
 
         }
+        /*
+        Test content for proof of concept of csv output (TODO: Check if Sets can be imported into MongoDB and Neo4J this way)
+         */
         Book b = new Book();
         b.setAuthor("A. G. Jakobsen");
         b.setTitle("How to Test in modern Computer Science");
