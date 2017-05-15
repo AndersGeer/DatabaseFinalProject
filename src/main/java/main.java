@@ -9,18 +9,33 @@ public class main {
 
     public static void main(String[] args) throws IOException {
         try(BufferedReader br = new BufferedReader(new FileReader("SampleTextFiles/10022.txt"))) {
-            StringBuilder sb = new StringBuilder();
+            //StringBuilder sb = new StringBuilder();
             String line = br.readLine();
 
             while (line != null) {
-                sb.append(line);
-                sb.append(System.lineSeparator());
+                LineParsing(line);
+                //sb.append(line);
+                //sb.append(System.lineSeparator());
                 line = br.readLine();
             }
-            String everything = sb.toString();
+            //String everything = sb.toString();
 
-            System.out.println(everything);
+            System.out.println();
+
+
         }
+        Book b = new Book();
+        b.setAuthor("A. G. Jakobsen");
+        b.setTitle("How to Test in modern Computer Science");
+        b.addCity("Holte");
+        b.addCity("Lyngby");
+        b.addCity("Roskilde");
+
+        System.out.println(b);
+    }
+
+    private static void LineParsing(String line) {
+
     }
 
 }
