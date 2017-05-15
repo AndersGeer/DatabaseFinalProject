@@ -16,10 +16,12 @@ Types of queries
 Amongst others, they provide public domain books as plain text files. A description on how to automatically 
 download these books is given here: 
 https://www.exratione.com/2014/11/how-to-politely-download-all-english-language-text-format-files-from-project-gutenberg/. 
-Based on this, I provide a machine configuration which allows you to download all the books via a Digitalocean Droplet https://github.com/HelgeCPH/db_course_nosql/tree/master/book_download. 
+Based on this, I provide a machine configuration which allows you to download all the books via a Digitalocean Droplet
+https://github.com/HelgeCPH/db_course_nosql/tree/master/book_download. 
 Alternatively, you can get all the books from a USB key in class.
 * A CSV file with many cities and their geolocations is avalable from www.geonames.org http://download.geonames.org/export/dump/ 
-where we are especially interested in file http://download.geonames.org/export/dump/cities15000.zip or http://download.geonames.org/export/dump/cities5000.zip
+where we are especially interested in file http://download.geonames.org/export/dump/cities15000.zip or
+http://download.geonames.org/export/dump/cities5000.zip
 * You write a program that scans each book, i.e., each text file and extracts all city names. 
 For this task a heuristic is good enough. That is, it is okay if you miss cities with extravagant names.
 * Your databases store thus, author names, book titles, and names of cities, their geolocations and their occurences in texts.
