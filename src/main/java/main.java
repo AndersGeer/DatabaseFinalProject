@@ -39,43 +39,32 @@ public class main {
         AuthorLineNumber = authorLineNumber;
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         main m = new main();
 
-        /*
-        Test content for proof of concept of csv output (TODO: Check if Sets can be imported into MongoDB and Neo4J this way)
-         */
-        Book b = new Book();
-        b.setAuthor("A. G. Jakobsen");
-        b.setTitle("How to Test in modern Computer Science");
-        b.addCity("Holte");
-        b.addCity("Lyngby");
-        b.addCity("Roskilde");
-
-        System.out.println(b);
     }
 
-    public main() throws IOException {
+    public main() throws IOException, InterruptedException {
         try (BufferedReader br = new BufferedReader(new FileReader("SampleTextFiles/10022.txt"))) {
             //StringBuilder sb = new StringBuilder();
             String line = br.readLine();
             Book book = new Book();
 
             while (line != null) {
-                LineParsing(line, book, getTitleLineNumber(), getAuthorLineNumber());
+                LineParsing(line, book);
                 //sb.append(line);
                 //sb.append(System.lineSeparator());
                 line = br.readLine();
             }
             //String everything = sb.toString();
 
-            System.out.println();
+            System.out.println(book);
         }
     }
 
-    private void LineParsing(String line, Book b, int TitleLineNumber, int AuthorLineNumber) {
+    private void LineParsing(String line, Book b) {
 
-        String[] words = line.split(" ");
+        String[] words = line.split("\\s+");
 
 
 
@@ -105,9 +94,9 @@ public class main {
 
         }
 
-        if (line.toLowerCase().contains("start of this project gutenberg ebook"))
+        if (line.toLowerCase().contains("end of this project gutenberg ebook"))
         {
-            bookStarted = true;
+            bookStarted = false;
         }
 
         if (bookStarted)
@@ -126,30 +115,40 @@ public class main {
             First word of sentence:     Avoid all words after a dot. - Be aware this might skip some city names however it's likely these will be referenced from somewhere else in the book.
             */
 
+
             for (int i = 0; i < words.length; i++) {
 
-                //Checks if first word of sentence
-                if (getLastWord()){
-                    i++;
-                    setLastWord(!getLastWord());
+
+                if ((!line.isEmpty() || !words[i].isEmpty()) && words[i] != null) {
+                    //Checks if first word of sentence
+                    if (getLastWord()) {
+                        setLastWord(!getLastWord());
+                    } else {
+                        //Checks if uppercase
+                        if (Character.isUpperCase(words[i].charAt(0))) ;
+                        {
+                            //Checks for common prefixes defined in array
+                            if (isWordACommonCityPrefix(words[i], commonCityPrefixes)) {
+                                b.addCity(words[i] + " " + words[i + 1]);
+                                System.out.println(words[i] + words[i+1] + ": is considered a city name, adding...");
+                                i++;
+                            } else {
+                                System.out.println(words[i] + ": is considered a city name, adding...");
+                                b.addCity(words[i]);
+                            }
+                        }
+                        if (words[i].charAt(words[i].length() - 1) == '.') {
+                            setLastWord(true);
+                        }
+                    }
+
+
                 }
                 else
                 {
-                    //Checks if uppercase
-                    if (Character.isUpperCase(words[i].charAt(0)));
-                    {
-                        //Checks for common prefixes defined in array
-                        if (isWordACommonCityPrefix(words[i],commonCityPrefixes))
-                        {
-                            b.addCity(words[i] + " " + words[i+1]);
-                            i++;
-                        }
-                        else
-                        {
-                            b.addCity(words[i]);
-                        }
-                    }
+                    setLastWord(true);
                 }
+
 
             }
 
@@ -159,6 +158,11 @@ public class main {
              */
         }
 
+
+        if (line.toLowerCase().contains("start of this project gutenberg ebook"))
+        {
+            bookStarted = true;
+        }
 
 
 
