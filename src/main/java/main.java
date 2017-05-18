@@ -1,27 +1,47 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 
 
 public class main {
 
+    private  int TitleLineNumber = -1;
+    private  int AuthorLineNumber = -1;
+    private  boolean bookStarted = false;
+    private boolean lastWordWasLastWordOfSentence = true;
+    private String[] commonCityPrefixes = new String[]{"Los", "Las", "New", "San"};
+
+    public boolean getLastWord()
+    {
+        return lastWordWasLastWordOfSentence;
+    }
+
+    public void setLastWord(boolean lastWord)
+    {
+        this.lastWordWasLastWordOfSentence = lastWord;
+    }
+
+
+    public  int getTitleLineNumber() {
+        return TitleLineNumber;
+    }
+
+    public  void setTitleLineNumber(int titleLineNumber) {
+        TitleLineNumber = titleLineNumber;
+    }
+
+    public  int getAuthorLineNumber() {
+        return AuthorLineNumber;
+    }
+
+    public  void setAuthorLineNumber(int authorLineNumber) {
+        AuthorLineNumber = authorLineNumber;
+    }
+
     public static void main(String[] args) throws IOException {
-        try(BufferedReader br = new BufferedReader(new FileReader("SampleTextFiles/10022.txt"))) {
-            //StringBuilder sb = new StringBuilder();
-            String line = br.readLine();
+        main m = new main();
 
-            while (line != null) {
-                LineParsing(line);
-                //sb.append(line);
-                //sb.append(System.lineSeparator());
-                line = br.readLine();
-            }
-            //String everything = sb.toString();
-
-            System.out.println();
-
-
-        }
         /*
         Test content for proof of concept of csv output (TODO: Check if Sets can be imported into MongoDB and Neo4J this way)
          */
@@ -35,20 +55,67 @@ public class main {
         System.out.println(b);
     }
 
-    private static void LineParsing(String line) {
+    public main() throws IOException {
+        try (BufferedReader br = new BufferedReader(new FileReader("SampleTextFiles/10022.txt"))) {
+            //StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+            Book book = new Book();
+
+            while (line != null) {
+                LineParsing(line, book, getTitleLineNumber(), getAuthorLineNumber());
+                //sb.append(line);
+                //sb.append(System.lineSeparator());
+                line = br.readLine();
+            }
+            //String everything = sb.toString();
+
+            System.out.println();
+        }
+    }
+
+    private void LineParsing(String line, Book b, int TitleLineNumber, int AuthorLineNumber) {
 
         String[] words = line.split(" ");
 
-        for (int i = 0; i < words.length; i++) {
 
-            //TODO: Check for title (possibly over multiple lines
 
-            //TODO: Check for auther, likewise
+        if (line.contains("Title:") || (getTitleLineNumber() >=0 && getTitleLineNumber() < 2))
+        {
 
-            /*
-            TODO: Check for words starting with uppercase
+            if(line.isEmpty()){setTitleLineNumber(2);}
+            else
+            {
+                b.addToTitle(line);
+                setTitleLineNumber(0);
+            }
+
+        }
+
+
+
+        if (line.contains("Author:") || (getAuthorLineNumber() >=0 && getAuthorLineNumber() < 2))
+        {
+
+            if(line.isEmpty()){setAuthorLineNumber(2);}
+            else
+            {
+                b.addToAuthor(line);
+                setAuthorLineNumber(0);
+            }
+
+        }
+
+        if (line.toLowerCase().contains("start of this project gutenberg ebook"))
+        {
+            bookStarted = true;
+        }
+
+        if (bookStarted)
+        {
+             /*
+
             Drop all special chars ('Calabar,"', is an example of a city in CURRENT BOOK) ?
-            Possibly check if  it's a common prefix (Los, New, San, Las, etc) ?
+            Possibly check if it's a common prefix (Los, New, San, Las, etc) ?
             */
 
             /*
@@ -59,13 +126,47 @@ public class main {
             First word of sentence:     Avoid all words after a dot. - Be aware this might skip some city names however it's likely these will be referenced from somewhere else in the book.
             */
 
+            for (int i = 0; i < words.length; i++) {
+
+                //Checks if first word of sentence
+                if (getLastWord()){
+                    i++;
+                    setLastWord(!getLastWord());
+                }
+                else
+                {
+                    //Checks if uppercase
+                    if (Character.isUpperCase(words[i].charAt(0)));
+                    {
+                        //Checks for common prefixes defined in array
+                        if (isWordACommonCityPrefix(words[i],commonCityPrefixes))
+                        {
+                            b.addCity(words[i] + " " + words[i+1]);
+                            i++;
+                        }
+                        else
+                        {
+                            b.addCity(words[i]);
+                        }
+                    }
+                }
+
+            }
+
 
             /*
             TODO: Outliers. Sample set contains what appears to be the bible, and contains no title. We need to either skip it, or do something with it
              */
-
         }
 
+
+
+
     }
+
+    private boolean isWordACommonCityPrefix(String word, String[] commonPrefix) {
+        return (Arrays.asList(commonPrefix).contains(word));
+    }
+
 
 }

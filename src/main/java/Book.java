@@ -2,6 +2,7 @@ import java.util.HashSet;
 
 public class Book {
 
+    private static int UNKNOWN_TITLE_NUMBER = 0;
     private String title;
     private String author;
     private HashSet<String> cities;
@@ -25,8 +26,18 @@ public class Book {
         return cities;
     }
 
+    public void setTitleUnknown(){this.title = "unknown title #" + ++UNKNOWN_TITLE_NUMBER;}
+
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public void addToTitle(String stringToAdd){
+        this.title = this.title + " " + stringToAdd;
+    }
+
+    public void addToAuthor(String stringToAdd){
+        this.author = this.author + " " + stringToAdd;
     }
 
     public void setAuthor(String author) {
