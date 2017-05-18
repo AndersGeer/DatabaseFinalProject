@@ -41,7 +41,18 @@ public class main {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         main m = new main();
+        //main m = new main("The chief city is a Calabar,\" said Mother Slessor. \"It is a dark country because the light of", new Book());
 
+
+
+    }
+
+    public main(String line, Book b)
+    {
+        this.bookStarted = true;
+        LineParsing(line, b);
+
+        System.out.println(b);
     }
 
     public main() throws IOException, InterruptedException {
@@ -63,7 +74,6 @@ public class main {
     }
 
     private void LineParsing(String line, Book b) {
-
         String[] words = line.split("\\s+");
 
 
@@ -118,14 +128,13 @@ public class main {
 
             for (int i = 0; i < words.length; i++) {
 
-
                 if ((!line.isEmpty() || !words[i].isEmpty()) && words[i] != null) {
                     //Checks if first word of sentence
                     if (getLastWord()) {
                         setLastWord(!getLastWord());
                     } else {
                         //Checks if uppercase
-                        if (Character.isUpperCase(words[i].charAt(0))) ;
+                        if (Character.isUpperCase(words[i].charAt(0)))
                         {
                             //Checks for common prefixes defined in array
                             if (isWordACommonCityPrefix(words[i], commonCityPrefixes)) {
