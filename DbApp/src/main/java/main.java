@@ -4,7 +4,7 @@ import asg.cliche.Param;
 public class main {
 
     //Commands
-    @Command(description="Searches a city name to find all books and their authors mesntioning that city")
+    @Command(description="Searches a city name to find all books and their authors mentioning that city")
     public void citySearch (@Param(name="City Name") String city)
     {
         //TODO:
