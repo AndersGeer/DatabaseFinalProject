@@ -5,6 +5,10 @@ import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import org.neo4j.driver.v1.*;
 
+import java.nio.charset.MalformedInputException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class CitySearch implements IWorker {
     
     //Neo4J
@@ -13,8 +17,24 @@ public class CitySearch implements IWorker {
     
     //Mongodb
     
-    public CitySearch(String searchTerm, String mongoDatabaseName, String mongoCollectionName)
-    {
+    public CitySearch(String searchTerm, String mongoDatabaseName, String mongoCollectionName) throws Exception {
+        if (searchTerm == null || mongoCollectionName == null || mongoDatabaseName == null) throw new NullPointerException();
+        Pattern p = Pattern.compile("[A-z]+");
+        Matcher searchPatternMatcher = p.matcher(searchTerm.trim());
+        Matcher collectionPatternMatcher = p.matcher(mongoCollectionName.trim());
+        Matcher dbPatternMatcher = p.matcher(mongoDatabaseName.trim());
+        if(!searchPatternMatcher.matches())
+        {
+            throw new Exception(searchTerm + " not a valid search term");
+        }
+        if (!collectionPatternMatcher.matches())
+        {
+            throw new Exception(mongoCollectionName + " not a valid mongo collection term");
+        }
+        if (!dbPatternMatcher.matches())
+        {
+            throw new Exception(mongoDatabaseName + " not a valid mongo database term");
+        }
         Neo4jConnect();
         //MongoConnect(mongoDatabaseName, mongoCollectionName);
 

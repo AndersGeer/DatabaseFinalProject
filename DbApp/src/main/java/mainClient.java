@@ -1,12 +1,13 @@
 import asg.cliche.Command;
 import asg.cliche.Param;
 
+import java.nio.charset.MalformedInputException;
+
 public class mainClient {
 
     //Commands
     @Command(description="Searches a city name to find all books and their authors mentioning that city")
-    public void citySearch (@Param(name="City Name") String city)
-    {
+    public void citySearch (@Param(name="City Name") String city) throws Exception {
         //TODO:
         CitySearch citySearch = new CitySearch("rsdf","helo","ff");
     }
@@ -32,8 +33,8 @@ public class mainClient {
         //TODO:
     }
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         mainClient m = new mainClient();
-        m.citySearch("roskilde");
+        m.citySearch("abc");
     }
 }
