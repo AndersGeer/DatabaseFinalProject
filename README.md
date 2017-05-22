@@ -1,4 +1,4 @@
-# DatabaseFinalProject
+# DatabaseFinalProject [![Build Status](https://travis-ci.org/flaps16/DatabaseFinalProject.svg?branch=master)](https://travis-ci.org/flaps16/DatabaseFinalProject)
 by Anders Geer Jakobsen and Mohammed Salameh
 
 This is a schoold project on the PBA of Copenhagne Business Academy, Lyngby for the Software Development PBAs.
