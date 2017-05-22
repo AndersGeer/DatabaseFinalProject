@@ -1,13 +1,14 @@
 import asg.cliche.Command;
 import asg.cliche.Param;
 
-public class main {
+public class mainClient {
 
     //Commands
     @Command(description="Searches a city name to find all books and their authors mentioning that city")
     public void citySearch (@Param(name="City Name") String city)
     {
         //TODO:
+        CitySearch citySearch = new CitySearch("rsdf","helo","ff");
     }
 
     //Commands
@@ -29,5 +30,10 @@ public class main {
     public void geoSearch (@Param(name="City Name") String city)
     {
         //TODO:
+    }
+    
+    public static void main(String[] args) {
+        mainClient m = new mainClient();
+        m.citySearch("roskilde");
     }
 }

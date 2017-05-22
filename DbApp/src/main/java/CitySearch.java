@@ -1,19 +1,73 @@
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
+import org.neo4j.driver.v1.*;
+
 public class CitySearch implements IWorker {
+    
+    //Neo4J
+    Driver driver;
+    Session session;
+    
+    //Mongodb
+    
     public CitySearch(String searchTerm, String mongoDatabaseName, String mongoCollectionName)
     {
         Neo4jConnect();
-        MongoConnect(mongoDatabaseName, mongoCollectionName);
+        //MongoConnect(mongoDatabaseName, mongoCollectionName);
 
-        Search(searchTerm);
+        //Search(searchTerm);
 
     }
+    
+    
+    @Override
+    public void Neo4jConnect() {
+        driver = GraphDatabase.driver(
+                "bolt://165.227.128.49:7687/",
+                AuthTokens.basic( "neo4j", "class" ));
+        session = driver.session();
 
+        
+        // Run a query matching all nodesx
+        StatementResult result = session.run("MATCH (c:City) RETURN c");
+    
+        for (Record obj : result.list()) {
+            System.out.println(obj);
+        }
+        /*
+        while ( result.hasNext() ) {
+            Record record = result.next();
+            System.out.println( record.get("name").asString() );
+        }
 
+        session.close();
+        driver.close();
+        */
+    }
+    
+    @Override
+    public void MongoConnect(String databaseName, String collectionName) {
+        MongoClientURI connStr = new MongoClientURI("mongodb://207.154.228.197");
+        MongoClient mongoClient = new MongoClient(connStr);
+    
+        MongoDatabase db = mongoClient.getDatabase(databaseName);
+        MongoCollection<Document> collection = db.getCollection(collectionName);
+    
+        Document myDoc = collection.find().first();
+        System.out.println(myDoc.toJson());
+    }
+    
     //Work method(s)
     @Override
     public void Search(String searchString)
     {
-
+        //TODO: 0. Tests
+        //TODO: 1. Search
+        //TODO: 2. Query for Databases
+        //TODO: 3. Add timer
     }
 
 
