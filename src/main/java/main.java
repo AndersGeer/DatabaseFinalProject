@@ -12,6 +12,39 @@ public class main {
     private  boolean bookStarted = false;
     private boolean lastWordWasLastWordOfSentence = true;
     private String[] commonCityPrefixes = new String[]{"Los", "Las", "New", "San"};
+    //region Suf & prefix's
+    /*
+    * Prefixes:
+    * Santa
+    * Lake / Lakes
+    *
+    * -polis
+    * -ville
+    * -ford
+    * -furt
+    * -forth
+    * -shire
+    * -berg
+    * -burg
+    * -borough
+    * -brough
+    * -field
+    * -kirk
+    * -bury
+    * -stadt
+    * bridge
+    * -by
+    * -cester
+    * -chester
+    * -ham
+    * -market
+    * -mouth
+    * -ton
+    * -town
+    * -wick
+    *
+    * */
+    //endregion
 
     public boolean getLastWord()
     {
@@ -163,6 +196,7 @@ public class main {
 
 
             /*
+            TODO: Create a separate method, that compares the extracted strings from the txt’s and writes the matches to a CSV.
             TODO: Outliers. Sample set contains what appears to be the bible, and contains no title. We need to either skip it, or do something with it
              */
         }
