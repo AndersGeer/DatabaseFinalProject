@@ -60,13 +60,13 @@ public class Book {
         StringBuilder sb = new StringBuilder();
         String oneLine = "";
         sb.append("[");
-        sb.append("\"" + getTitle()+ "\"");
+        sb.append("\"" + getTitle().trim()+ "\"");
         sb.append(CSV_SEPERATOR);
-        sb.append("\"" + getAuthor()+ "\"");
+        sb.append("\"" + getAuthor().trim()+ "\"");
         sb.append(CSV_SEPERATOR);
 
         for (City c:cities){
-            sb.append("\"" + c.toString() + "\"");
+            sb.append("\"" + c.toString().trim() + "\"");
             sb.append(CSV_SEPERATOR);
         }
         sb.append("]");

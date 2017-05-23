@@ -123,7 +123,8 @@ public class main {
                 line = br.readLine();
             }
             System.out.println(book);
-            writer.println(book);
+            String bookLine = book.toString().replace(",]","]");
+            writer.println(bookLine);
         }
 
 
