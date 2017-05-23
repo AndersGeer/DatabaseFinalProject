@@ -7,6 +7,8 @@
         <groupId>dk.cphbusiness.Xenial</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
+
+    <artifactId>DbApp</artifactId>
     <modelVersion>4.0.0</modelVersion>
 
     <build>
@@ -24,11 +26,7 @@
 
 
     <dependencies>
-        <dependency>
-            <groupId>dk.cphbusiness.Xenial</groupId>
-            <artifactId>DbApp</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
+        
         <dependency>
             <groupId>com.googlecode.clichemaven</groupId>
             <artifactId>cliche</artifactId>
@@ -51,7 +49,7 @@
         </dependency>
     </dependencies>
 
-    <artifactId>DbApp</artifactId>
+
 
 
 </project>
