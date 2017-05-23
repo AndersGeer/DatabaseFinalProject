@@ -1,9 +1,9 @@
- - language: java
-  - jdk: oraclejdk8
-  - notifications:
-  - email:
-      on_success: never # default: change
-      on_failure: always # default: always
+language: java
+jdk: oraclejdk8
+notifications:
+ email:
+  on_success: never # default: change
+  on_failure: always # default: always
 script:
   - cd DBApp
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
