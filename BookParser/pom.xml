@@ -9,6 +9,7 @@
         <groupId>dk.cphbusiness.Xenial</groupId>
         <version>0.5</version>
     </parent>
+    <packaging>pom</packaging>
 
     <artifactId>BookParser</artifactId>
 

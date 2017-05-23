@@ -8,7 +8,7 @@
         <version>0.5</version>
 
     </parent>
-
+<packaging>pom</packaging>
     <artifactId>DbApp</artifactId>
     <modelVersion>4.0.0</modelVersion>
 
