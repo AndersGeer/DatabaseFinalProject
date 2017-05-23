@@ -1,3 +1,4 @@
+import java.util.Collection;
 import java.util.HashSet;
 
 public class Book {
@@ -5,8 +6,8 @@ public class Book {
     private static int UNKNOWN_TITLE_NUMBER = 0;
     private String title;
     private String author;
-    private HashSet<String> cities;
-    private final String CSV_SEPERATOR = ",";
+    private HashSet<City> cities;
+    private final String CSV_SEPERATOR = "|";
 
     public Book() {
         title = "";
@@ -22,32 +23,33 @@ public class Book {
         return author;
     }
 
-    public HashSet<String> getCities() {
+    public Collection<City> getCities() {
         return cities;
     }
 
     public void setTitleUnknown(){this.title = "unknown title #" + ++UNKNOWN_TITLE_NUMBER;}
 
     public void setTitle(String title) {
-        this.title = title;
+        this.title = title.trim();
     }
 
     public void addToTitle(String stringToAdd){
-        this.title = this.title + " " + stringToAdd;
+        this.title = this.title + " " + stringToAdd.trim();
     }
 
     public void addToAuthor(String stringToAdd){
-        this.author = this.author + " " + stringToAdd;
+        this.author = this.author + " " + stringToAdd.trim();
     }
 
     public void setAuthor(String author) {
-        this.author = author;
+        this.author = author.trim();
     }
 
-    public void addCity(String city)
+    public void addCity(City city)
     {
         cities.add(city);
     }
+
 
     @Override
     public String toString() {
@@ -58,8 +60,10 @@ public class Book {
         sb.append(CSV_SEPERATOR);
         sb.append(getAuthor());
         sb.append(CSV_SEPERATOR);
-        sb.append(getCities());
-
+        for (City c:cities){
+            sb.append(c.toString());
+            sb.append(CSV_SEPERATOR);
+        }
         return sb.toString();
     }
 }

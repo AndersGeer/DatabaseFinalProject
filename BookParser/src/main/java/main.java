@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,6 +15,7 @@ public class main {
     private  boolean bookStarted = false;
     private boolean lastWordWasLastWordOfSentence = true;
     private String[] commonCityPrefixes = new String[]{"Los", "Las", "New", "San"};
+    private HashMap<String,City> Cities = new HashMap<>();
 
     public boolean getLastWord()
     {
@@ -43,22 +45,25 @@ public class main {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
+
+
         //main m = new main();
-        //main m = new main("The chief city is a Calabar,\" said Mother Slessor. \"It is a dark country because the light of", new Book());
-        main m = new main("SampleTextFiles");
+        //main m = new main("The Epworth Chipinge Chiredzi Gokwe", new Book());
+        main m = new main("BookParser/SampleTextFiles");
 
 
     }
 
-    public main(String line, Book b)
-    {
+    public main(String line, Book b) throws IOException {
+        ReadCities("BookParser/CitiesList/extractedCitiesLatLng.csv");
         this.bookStarted = true;
         LineParsing(line, b);
 
-        System.out.println(b);
+        //System.out.println(b);
     }
 
     public main(String folderLocation) throws IOException {
+        ReadCities("BookParser/CitiesList/extractedCitiesLatLng.csv");
         File folder = new File(folderLocation);
         File[] listOfFiles = folder.listFiles();
 
@@ -69,8 +74,28 @@ public class main {
         }
     }
 
-    public main() throws IOException, InterruptedException {
-        readFile(new File("SampleTextFiles/10022.txt"));
+    private void ReadCities(String csvFile) throws IOException {
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+            //StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+            line = br.readLine();
+
+
+            while (line != null) {
+                String[] words = line.trim().split("\\s+");
+                System.out.println(line);
+                if (words.length == 3)
+                {
+                    Cities.put(words[0], new City(words[0],words[1],words[2]));
+                }
+                line = br.readLine();
+            }
+        }
+    }
+
+    public void main() throws IOException{
+        ReadCities("BookParser/CitiesList/extractedCitiesLatLng.csv");
+        readFile(new File("BookParser/SampleTextFiles/10022.txt"));
     }
 
     private void readFile(File file) throws IOException {
@@ -158,12 +183,22 @@ public class main {
                         {
                             //Checks for common prefixes defined in array
                             if (isWordACommonCityPrefix(words[i], commonCityPrefixes) && words[i] != words[words.length-1]) {
-                                b.addCity(words[i] + " " + words[i + 1]);
-                                System.out.println(words[i] + words[i+1] + ": is considered a city name, adding...");
-                                i++;
+                                String city = words[i] + " " + words[i+1];
+                                if (Cities.keySet().contains(city))
+                                {
+                                    b.addCity(Cities.get(words[i]));
+                                    //System.out.println(words[i] + words[i+1] + ": is considered a city name, adding...");
+                                    i++;
+                                }
+
                             } else {
-                                System.out.println(words[i] + ": is considered a city name, adding...");
-                                b.addCity(words[i]);
+                                String city = words[i];
+                                if (Cities.keySet().contains(city))
+                                {
+                                    //System.out.println(words[i] + ": is considered a city name, adding...");
+                                    b.addCity(Cities.get(words[i]));
+                                }
+
                             }
                         }
                         if (words[i].charAt(words[i].length() - 1) == '.') {
