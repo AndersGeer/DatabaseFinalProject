@@ -1,15 +1,16 @@
+import Exceptions.InputException;
 import asg.cliche.Command;
 import asg.cliche.Param;
 
-import java.nio.charset.MalformedInputException;
+import java.io.IOException;
 
 public class mainClient {
 
     //Commands
     @Command(description="Searches a city name to find all books and their authors mentioning that city")
-    public void citySearch (@Param(name="City Name") String city) throws Exception {
+    public void citySearch (@Param(name="City Name") String city) throws InputException {
         //TODO:
-        CitySearch citySearch = new CitySearch("rsdf","helo","ff");
+        CitySearch citySearch = new CitySearch(city,"helo","ff");
     }
 
     //Commands
@@ -33,8 +34,13 @@ public class mainClient {
         //TODO:
     }
     
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws InputException, IOException {
         mainClient m = new mainClient();
-        m.citySearch("abc");
+        m.citySearch("Roskilde");
+        /*
+        Shell shell = ShellFactory.createConsoleShell("Books<^.^", "Welcome to books-console! \n\n?help for instructions\n?list for a list of commands\n\n", m);
+        shell.commandLoop();
+        */
+
     }
 }
