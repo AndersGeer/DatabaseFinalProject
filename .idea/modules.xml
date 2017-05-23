@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/BookParser/BookParser.iml" filepath="$PROJECT_DIR$/BookParser/BookParser.iml" />
-      <module fileurl="file://D:\Users\flaps_win10\IdeaProjects\DatabaseFinalProject\DbApp\DbApp.iml" filepath="D:\Users\flaps_win10\IdeaProjects\DatabaseFinalProject\DbApp\DbApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/DatabaseFinalProject.iml" filepath="$PROJECT_DIR$/DatabaseFinalProject.iml" />
       <module fileurl="file://$PROJECT_DIR$/DbApp/DbApp.iml" filepath="$PROJECT_DIR$/DbApp/DbApp.iml" />
     </modules>

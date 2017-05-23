@@ -8,7 +8,7 @@ public class Book {
     private String title;
     private String author;
     private HashSet<City> cities;
-    private final String CSV_SEPERATOR = "|";
+    private final String CSV_SEPERATOR = ",";
 
 
     public Book() {
@@ -59,15 +59,17 @@ public class Book {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         String oneLine = "";
+        sb.append("[");
+        sb.append("\"" + getTitle()+ "\"");
+        sb.append(CSV_SEPERATOR);
+        sb.append("\"" + getAuthor()+ "\"");
+        sb.append(CSV_SEPERATOR);
 
-        sb.append(getTitle());
-        sb.append(CSV_SEPERATOR);
-        sb.append(getAuthor());
-        sb.append(CSV_SEPERATOR);
         for (City c:cities){
-            sb.append(c.toString());
+            sb.append("\"" + c.toString() + "\"");
             sb.append(CSV_SEPERATOR);
         }
+        sb.append("]");
         return sb.toString();
     }
 }
