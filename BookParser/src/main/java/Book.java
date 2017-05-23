@@ -4,10 +4,12 @@ import java.util.HashSet;
 public class Book {
 
     private static int UNKNOWN_TITLE_NUMBER = 0;
+    private static int UNKNOWN_AUTHOR_NUMER = 0;
     private String title;
     private String author;
     private HashSet<City> cities;
     private final String CSV_SEPERATOR = "|";
+
 
     public Book() {
         title = "";
@@ -28,6 +30,8 @@ public class Book {
     }
 
     public void setTitleUnknown(){this.title = "unknown title #" + ++UNKNOWN_TITLE_NUMBER;}
+
+    public void setAuthorUnknown(){this.author = "unknown author #" + ++UNKNOWN_AUTHOR_NUMER;}
 
     public void setTitle(String title) {
         this.title = title.trim();

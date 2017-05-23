@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -16,6 +13,7 @@ public class main {
     private boolean lastWordWasLastWordOfSentence = true;
     private String[] commonCityPrefixes = new String[]{"Los", "Las", "New", "San"};
     private HashMap<String,City> Cities = new HashMap<>();
+    PrintWriter writer = null;
 
     public boolean getLastWord()
     {
@@ -56,9 +54,10 @@ public class main {
 
     public main(String line, Book b) throws IOException {
         ReadCities("BookParser/CitiesList/extractedCitiesLatLng.csv");
+        writer = new PrintWriter("BookParser/Output/data.csv", "UTF-8");
         this.bookStarted = true;
         LineParsing(line, b);
-
+        writer.close();
         //System.out.println(b);
     }
 
@@ -66,12 +65,13 @@ public class main {
         ReadCities("BookParser/CitiesList/extractedCitiesLatLng.csv");
         File folder = new File(folderLocation);
         File[] listOfFiles = folder.listFiles();
-
+        writer = new PrintWriter("BookParser/Output/data.csv", "UTF-8");
         for (File file : listOfFiles) {
             if (file.isFile()) {
                 readFile(file);
             }
         }
+        writer.close();
     }
 
     private void ReadCities(String csvFile) throws IOException {
@@ -95,10 +95,13 @@ public class main {
 
     public void main() throws IOException{
         ReadCities("BookParser/CitiesList/extractedCitiesLatLng.csv");
+        writer = new PrintWriter("BookParser/Output/data.csv", "UTF-8");
         readFile(new File("BookParser/SampleTextFiles/10022.txt"));
+        writer.close();
     }
 
     private void readFile(File file) throws IOException {
+
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             //StringBuilder sb = new StringBuilder();
             String line = br.readLine();
@@ -106,47 +109,52 @@ public class main {
 
             while (line != null) {
                 LineParsing(line, book);
-                //sb.append(line);
-                //sb.append(System.lineSeparator());
                 line = br.readLine();
             }
-            //String everything = sb.toString();
-
             System.out.println(book);
+            writer.println(book);
         }
+
+
     }
 
-    private void LineParsing(String line, Book b) {
+    private void LineParsing(String line, Book b)
+    {
         String[] words = line.trim().split("\\s+");
-
-
-
         if (line.contains("Title:") || (getTitleLineNumber() >=0 && getTitleLineNumber() < 2))
         {
-
+            String[] titleWords = line.trim().split("\\s+");
             if(line.isEmpty()){setTitleLineNumber(2);}
-            else
+            else if (!titleWords[0].toLowerCase().contains("title:"))
             {
                 b.addToTitle(line);
                 setTitleLineNumber(0);
             }
-
+            else
+            {
+                for (int i = 1; i < titleWords.length; i++) {
+                    b.addToTitle(titleWords[i]+" ");
+                }
+                setTitleLineNumber(0);
+            }
         }
-
-
-
         if (line.contains("Author:") || (getAuthorLineNumber() >=0 && getAuthorLineNumber() < 2))
         {
-
+            String[] authorWords = line.trim().split("\\s+");
             if(line.isEmpty()){setAuthorLineNumber(2);}
-            else
+            else if (!authorWords[0].toLowerCase().contains("author:"))
             {
                 b.addToAuthor(line);
                 setAuthorLineNumber(0);
             }
-
+            else
+            {
+                for (int i = 1; i < authorWords.length; i++) {
+                    b.addToAuthor(authorWords[i]+" ");
+                }
+                setTitleLineNumber(0);
+            }
         }
-
         if (line.toLowerCase().contains("end of this project gutenberg ebook"))
         {
             bookStarted = false;
@@ -155,7 +163,6 @@ public class main {
         if (bookStarted)
         {
              /*
-
             Drop all special chars ('Calabar,"', is an example of a city in CURRENT BOOK) ?
             Possibly check if it's a common prefix (Los, New, San, Las, etc) ?
             */
@@ -167,8 +174,6 @@ public class main {
             Countries:                  Similarly hard to avoid, does have some point of being there, if cities are in several countries
             First word of sentence:     Avoid all words after a dot. - Be aware this might skip some city names however it's likely these will be referenced from somewhere else in the book.
             */
-
-
             for (int i = 0; i < words.length; i++) {
 
                 if ((!line.isEmpty() || !words[i].isEmpty()) && words[i] != null) {
@@ -226,6 +231,16 @@ public class main {
         if (line.toLowerCase().contains("start of this project gutenberg ebook"))
         {
             bookStarted = true;
+
+            if (b.getTitle().isEmpty())
+            {
+                b.setTitleUnknown();
+            }
+            if (b.getAuthor().isEmpty())
+            {
+                b.setAuthorUnknown();
+            }
+
         }
 
 
