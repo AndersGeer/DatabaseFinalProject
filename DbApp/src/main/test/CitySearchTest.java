@@ -1,11 +1,4 @@
-
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import java.nio.charset.MalformedInputException;
-
-import static org.junit.Assert.*;
 
 
 public class CitySearchTest {
