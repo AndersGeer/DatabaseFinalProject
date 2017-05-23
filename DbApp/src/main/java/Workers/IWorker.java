@@ -1,9 +1,4 @@
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import org.bson.Document;
-import org.neo4j.driver.v1.*;
+package Workers;
 
 /**
  * Created by flaps_win10 on 21-05-2017.
