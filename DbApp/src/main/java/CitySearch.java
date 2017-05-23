@@ -1,3 +1,4 @@
+import Exceptions.InputException;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
@@ -5,7 +6,6 @@ import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import org.neo4j.driver.v1.*;
 
-import java.nio.charset.MalformedInputException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,7 +17,8 @@ public class CitySearch implements IWorker {
     
     //Mongodb
     
-    public CitySearch(String searchTerm, String mongoDatabaseName, String mongoCollectionName) throws Exception {
+    public CitySearch(String searchTerm, String mongoDatabaseName, String mongoCollectionName) throws InputException {
+        //region Logic for input values
         if (searchTerm == null || mongoCollectionName == null || mongoDatabaseName == null) throw new NullPointerException();
         Pattern p = Pattern.compile("[A-z]+");
         Matcher searchPatternMatcher = p.matcher(searchTerm.trim());
@@ -25,16 +26,19 @@ public class CitySearch implements IWorker {
         Matcher dbPatternMatcher = p.matcher(mongoDatabaseName.trim());
         if(!searchPatternMatcher.matches())
         {
-            throw new Exception(searchTerm + " not a valid search term");
+            throw new InputException(searchTerm + " not a valid search term");
         }
         if (!collectionPatternMatcher.matches())
         {
-            throw new Exception(mongoCollectionName + " not a valid mongo collection term");
+            throw new InputException(mongoCollectionName + " not a valid mongo collection term");
         }
         if (!dbPatternMatcher.matches())
         {
-            throw new Exception(mongoDatabaseName + " not a valid mongo database term");
+            throw new InputException(mongoDatabaseName + " not a valid mongo database term");
         }
+        //endregion
+
+
         Neo4jConnect();
         //MongoConnect(mongoDatabaseName, mongoCollectionName);
 
@@ -62,9 +66,6 @@ public class CitySearch implements IWorker {
             Record record = result.next();
             System.out.println( record.get("name").asString() );
         }
-
-        session.close();
-        driver.close();
         */
     }
     
@@ -88,6 +89,11 @@ public class CitySearch implements IWorker {
         //TODO: 1. Search
         //TODO: 2. Query for Databases
         //TODO: 3. Add timer
+
+        //region Neo4J close statements
+        session.close();
+        driver.close();
+        //endregion
     }
 
 
