@@ -1,8 +1,10 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class main {
@@ -41,8 +43,9 @@ public class main {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        main m = new main();
+        //main m = new main();
         //main m = new main("The chief city is a Calabar,\" said Mother Slessor. \"It is a dark country because the light of", new Book());
+        main m = new main("SampleTextFiles");
 
 
     }
@@ -55,8 +58,23 @@ public class main {
         System.out.println(b);
     }
 
+    public main(String folderLocation) throws IOException {
+        File folder = new File(folderLocation);
+        File[] listOfFiles = folder.listFiles();
+
+        for (File file : listOfFiles) {
+            if (file.isFile()) {
+                readFile(file);
+            }
+        }
+    }
+
     public main() throws IOException, InterruptedException {
-        try (BufferedReader br = new BufferedReader(new FileReader("SampleTextFiles/10022.txt"))) {
+        readFile(new File("SampleTextFiles/10022.txt"));
+    }
+
+    private void readFile(File file) throws IOException {
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             //StringBuilder sb = new StringBuilder();
             String line = br.readLine();
             Book book = new Book();
@@ -74,7 +92,7 @@ public class main {
     }
 
     private void LineParsing(String line, Book b) {
-        String[] words = line.split("\\s+");
+        String[] words = line.trim().split("\\s+");
 
 
 
@@ -134,10 +152,12 @@ public class main {
                         setLastWord(!getLastWord());
                     } else {
                         //Checks if uppercase
-                        if (Character.isUpperCase(words[i].charAt(0)))
+                        Pattern p = Pattern.compile("[A-z]+");
+                        Matcher matcher = p.matcher(words[i].trim());
+                        if (Character.isUpperCase(words[i].charAt(0)) && matcher.matches())
                         {
                             //Checks for common prefixes defined in array
-                            if (isWordACommonCityPrefix(words[i], commonCityPrefixes)) {
+                            if (isWordACommonCityPrefix(words[i], commonCityPrefixes) && words[i] != words[words.length-1]) {
                                 b.addCity(words[i] + " " + words[i + 1]);
                                 System.out.println(words[i] + words[i+1] + ": is considered a city name, adding...");
                                 i++;
