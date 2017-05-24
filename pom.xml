@@ -8,10 +8,10 @@
     <version>0.5</version>
     <packaging>pom</packaging>
 
-<modules>
-    <module>DbApp</module>
-    <module>BookParser</module>
-</modules>
+    <modules>
+        <module>DbApp</module>
+        <module>BookParser</module>
+    </modules>
 
     <build>
         <plugins>

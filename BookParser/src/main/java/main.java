@@ -13,7 +13,8 @@ public class main {
     private boolean lastWordWasLastWordOfSentence = true;
     private String[] commonCityPrefixes = new String[]{"Los", "Las", "New", "San"};
     private HashMap<String,City> Cities = new HashMap<>();
-    PrintWriter writer = null;
+    PrintWriter writerBook = null;
+    PrintWriter writerCity = null;
 
     public boolean getLastWord()
     {
@@ -54,10 +55,10 @@ public class main {
 
     public main(String line, Book b) throws IOException {
         ReadCities("BookParser/CitiesList/extractedCitiesLatLng.csv");
-        writer = new PrintWriter("BookParser/Output/data.csv", "UTF-8");
+        writerBook = new PrintWriter("BookParser/Output/data.csv", "UTF-8");
         this.bookStarted = true;
         LineParsing(line, b);
-        writer.close();
+        writerBook.close();
         //System.out.println(b);
     }
 
@@ -71,7 +72,7 @@ public class main {
                 readFile(file);
             }
         }
-        writer.close();
+        writerBook.close();
     }
 
     private void ReadCities(String csvFile) throws IOException {
@@ -97,18 +98,32 @@ public class main {
         ReadCities("BookParser/CitiesList/extractedCitiesLatLng.csv");
         InitWriter();
         readFile(new File("BookParser/SampleTextFiles/10022.txt"));
-        writer.close();
+        writerBook.close();
     }
-
-    private void InitWriter() throws FileNotFoundException, UnsupportedEncodingException {
-        writer = new PrintWriter("BookParser/Output/dataTest.csv", "UTF-8");
+    
+    private void CityWriter() throws FileNotFoundException, UnsupportedEncodingException {
+        writerBook = new PrintWriter("BookParser/Output/cities.csv", "UTF-8");
         StringBuilder sb = new StringBuilder();
+        sb.append("id");
+        sb.append(",");
+        sb.append("name");
+        sb.append(",");
+        sb.append("lat");
+        sb.append(",");
+        sb.append("lng");
+        writerBook.println(sb.toString());
+    }
+    private void InitWriter() throws FileNotFoundException, UnsupportedEncodingException {
+        writerBook = new PrintWriter("BookParser/Output/data.csv", "UTF-8");
+        StringBuilder sb = new StringBuilder();
+        sb.append("id");
+        sb.append(",");
         sb.append("title");
         sb.append(",");
         sb.append("author");
         sb.append(",");
         sb.append("cities");
-       writer.println(sb.toString());
+       writerBook.println(sb.toString());
     }
 
     private void readFile(File file) throws IOException {
@@ -122,9 +137,9 @@ public class main {
                 LineParsing(line, book);
                 line = br.readLine();
             }
-            System.out.println(book.toMongoString());
-            String bookLine = book.toMongoString().replace("\"\"","\",\"");
-            writer.println(bookLine);
+            System.out.println(book);
+            String bookLine = book.toString();
+            writerBook.println(bookLine);
         }
 
 
