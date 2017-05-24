@@ -65,7 +65,7 @@ public class main {
         ReadCities("BookParser/CitiesList/extractedCitiesLatLng.csv");
         File folder = new File(folderLocation);
         File[] listOfFiles = folder.listFiles();
-        writer = new PrintWriter("BookParser/Output/data.csv", "UTF-8");
+        InitWriter();
         for (File file : listOfFiles) {
             if (file.isFile()) {
                 readFile(file);
@@ -95,9 +95,20 @@ public class main {
 
     public void main() throws IOException{
         ReadCities("BookParser/CitiesList/extractedCitiesLatLng.csv");
-        writer = new PrintWriter("BookParser/Output/data.csv", "UTF-8");
+        InitWriter();
         readFile(new File("BookParser/SampleTextFiles/10022.txt"));
         writer.close();
+    }
+
+    private void InitWriter() throws FileNotFoundException, UnsupportedEncodingException {
+        writer = new PrintWriter("BookParser/Output/data.csv", "UTF-8");
+        StringBuilder sb = new StringBuilder();
+        sb.append("title");
+        sb.append(",");
+        sb.append("author");
+        sb.append(",");
+        sb.append("cities");
+       writer.println(sb.toString());
     }
 
     private void readFile(File file) throws IOException {
@@ -112,7 +123,8 @@ public class main {
                 line = br.readLine();
             }
             System.out.println(book);
-            writer.println(book);
+            String bookLine = book.toString().replace(",]","]");
+            writer.println(bookLine);
         }
 
 
