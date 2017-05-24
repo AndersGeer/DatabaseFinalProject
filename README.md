@@ -115,9 +115,11 @@ One way of doing it in mongodb
 ## Descriptions
 
 **Design**
+
 Neo4J Graph/datamodel
-![](Database%20Project/Neo4J%20DataModelling.png)
+
 **Book**
+
 	 Create node _Book_: 
 	* `CREATE (b:Book{title: "HelloWorld", author: "IoT" })` 
 	* `CREATE INDEX ON :Book(title)` 	
