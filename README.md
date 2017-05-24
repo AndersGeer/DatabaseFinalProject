@@ -157,14 +157,31 @@ Importing to Neo4J
 }
 ```
 
-Importing to Mongodb
 
 
 We started thinking about aggregating our data to require less database calls, however issues with imports made us decide to go with several, due to time constraints - we do think one single call is more efficient.
 
 ~~We chose to aggregate our data so ONLY 1 single call to the database is required, rather than having to JOIN multiple documents to respond to a query.~~
 
+Importing to Mongodb
+The import to mongo db was done with two csv files, one for books and one for cities, with cities having a uniqueness constraint on city names.
 
+```
+title,author,cities
+"White Queen of the Cannibals: The Story of Mary Slessor","A. J. Bueltmann","Come.Mojo.Dundee.Wright.God.Robertson"
+"The Father of British Canada: A Chronicle of Carleton","William Wood","Montmorency.Magna.Livingston.Forster.Anne.Versa$"The Secret of the Tower","Hope, Anthony","Can.Since.Come.Best.Of.Much.God"
+...
+``` 
+
+```
+id,name,lat,lng
+1607,Mojo,8.58679,39.12111
+2187,God,47.68324,19.13417
+7625,Robertson,-33.80342,19.88537
+...
+``` 
+
+These files allowed us to create the collecitons easily after a quick splitting of city names with a script on the books data - this was done after deleting all entries without any known cities mentioned or the script would fail - and these books are reasonably boring to have in the database, and could give problems later as well.
 
 **Implementation**
 - Use [Google Places API](https://developers.google.com/places/web-service/get-api-key) to retrieve an image from latitude, longitude and radius.
@@ -184,9 +201,5 @@ The parser does have a few constraints put in place to get as few false positive
     * Checks for a few predefined common prefixes to allow for city names such as New York, San Diego etc.
     * Ignores ALL special characters
         * This does miss a few names, such as spanish cities using `ñ` or french cities using `ç`  and similar
-
-
-
-
 
 
