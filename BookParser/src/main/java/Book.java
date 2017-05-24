@@ -5,6 +5,8 @@ public class Book {
 
     private static int UNKNOWN_TITLE_NUMBER = 0;
     private static int UNKNOWN_AUTHOR_NUMER = 0;
+    private static int BOOK_ID = 0;
+    private int id;
     private String title;
     private String author;
     private HashSet<City> cities;
@@ -12,22 +14,25 @@ public class Book {
 
 
     public Book() {
+        id = BOOK_ID++;
         title = "";
         author="";
         cities = new HashSet<>();
     }
 
     public String getTitle() {
-        return title;
+        return title.replace("\"","'");
     }
 
     public String getAuthor() {
-        return author;
+        return author.replace("\"","'");
     }
 
     public Collection<City> getCities() {
         return cities;
     }
+    
+    public int getBookId(){return id;}
 
     public void setTitleUnknown(){this.title = "unknown title #" + ++UNKNOWN_TITLE_NUMBER;}
 
@@ -57,19 +62,26 @@ public class Book {
 
     @Override
     public String toString() {
+        City[] cityArr = getCities().toArray(new City[getCities().size()]);
+        
         StringBuilder sb = new StringBuilder();
-        String oneLine = "";
-        sb.append("[");
+        sb.append("\"" + String.valueOf(getBookId()).trim()+ "\"");
+        sb.append(CSV_SEPERATOR);
         sb.append("\"" + getTitle().trim()+ "\"");
         sb.append(CSV_SEPERATOR);
         sb.append("\"" + getAuthor().trim()+ "\"");
+        
+       if (cityArr.length != 0) {
         sb.append(CSV_SEPERATOR);
-
-        for (City c:cities){
-            sb.append("\"" + c.toString().trim() + "\"");
-            sb.append(CSV_SEPERATOR);
+           
+            for (int i = 0; i < cityArr.length; i++) {
+                sb.append("\"" + cityArr[i].toString().trim() + "\"");
+                if (i != cityArr.length - 1) {
+                    sb.append(CSV_SEPERATOR);
+                }
+            }
         }
-        sb.append("]");
+        
         return sb.toString();
     }
 }
