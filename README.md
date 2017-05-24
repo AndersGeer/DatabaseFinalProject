@@ -92,16 +92,24 @@ Medians:
 Not applicable, for automation, slowness of user moving data from RoboMongo to our API would alow the process down.
 
 `db.Books.find({title:"-UserInput-"}, { cities: 1)`
+
 Given this document, we can then extract the city data and query our City collection for lat and lng
+
 `db.City.find({name:"-CityName-"},{lat:1, lng:1})`
+
 Returns latitude and longitude to be passed on to our connection to the google API for map generation.
+
 
 ### Query 3:
 Similarly combines Query 1 and 2 somewhat.
+
 `db.Books.find({author:"-UserInput-"}, { title: 1, cities: 1)`
+
 To send on cities to our City collection and thus get latitude and longitude
+
 `db.City.find({name:"-CityName-"},{lat:1, lng:1})`
 
 ### Query 4:
 One way of doing it in mongodb 
+
 `db.City.find({lat:{"$gt": ~(Lat-1)~}, lat:{"$lt": ~(Lat+1)~},lng:{"$gt": ~(lng-1)~},lng:{"$lt": ~(Lng+1)~}},{name:1})`
