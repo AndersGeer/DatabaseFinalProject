@@ -138,8 +138,23 @@ CREATE (b)-[m:MENTIONS]->(c)
 RETURN m
 ```
 
-Importing to Neo4J
-`"([a-zA-Z]*),(\+|\-)?(?:\d*\.)?\d+,(\+|\-)?(?:\d*\.)?\d+",`
+*Importing to Neo4J*
+We had some issues connecting through Neo4J Droplet and getting access to its local Database, this prevented us from running our Query’s, but everything should be able to run if you get a connection to the Droplet, following the below files and instructions:
+
+CSV files needed
+	 * bookMentionsCityFinal.csv
+	 * booksFinal.csv
+	 * citiesFinal.csv
+
+We chose to import the data through a Batch, since we were expecting to retrieve a dataset with over 100k+ nodes and relations. And neo4J allows through the Batch to import data very fast, the tool is located in /pathToNeo4J/bin/neo4J-import (/please NOTE: that the neo4j-import will be deprecated and neo4j-admin import will be used instead/) and is used as follows: 
+```
+neo4j-import --into data/databases/graph.db 
+--nodes import/booksFinal.csv 
+--nodes import/citiesFinal.csv 
+--relationships:MENTIONS import/bookMentionsCityFinal.csv
+```
+
+Since time wasn’t on our side, we sadly are a bit disappointed with the issues in Neo4j we got during the project. Else aside, as mentioned earlier, if you have a connection and the correct csv files, correctly formatted and structured, this will work!
 
 - MongoDB datamodel - Book
 
