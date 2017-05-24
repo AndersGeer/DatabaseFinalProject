@@ -4,6 +4,8 @@ notifications:
  email:
   on_success: never # default: change
   on_failure: always # default: always
+env: 
+ - TEST_DIR=DbApp
 script:
-  - cd DbApp
+  - cd $TEST_DIR
   - mvn test
