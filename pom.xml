@@ -6,7 +6,7 @@
     <artifactId>DatabaseFinalProject</artifactId>
     <groupId>dk.cphbusiness.Xenial</groupId>
     <version>0.5</version>
-<packaging>pom</packaging>
+    <packaging>pom</packaging>
 
 <modules>
     <module>DbApp</module>
