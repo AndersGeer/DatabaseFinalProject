@@ -34,6 +34,7 @@ Please note all mongo tests are run through RoboMongo, as the server would refus
 Tests are done on small data set (305 books) with an index on City name in the City collection
 
 `db.Books.find({cities:"New York"}, { title: 1, author: 1 })`
+`MATCH (c:City) WHERE c.name = "New York" RETURN c;`
 
 | Tests - "New York"| Run 1 | Run 2 | Run 3 | Run 4 | Run 5 |
 | :-:               |:-:    | :-:   |:-:    |  :-:  |  :-:  |
@@ -42,6 +43,7 @@ Tests are done on small data set (305 books) with an index on City name in the C
 |Results            | 0     | 0     |0      | 0     |  0    |
 
 `db.Books.find({cities:"God"}, { title: 1, author: 1 })`
+`MATCH (c:City) WHERE c.name = "God" RETURN c;`
 
 | Tests - "God"     | Run 1 | Run 2 | Run 3 | Run 4 | Run 5 |
 | :-:               |:-:    | :-:   |:-:    |  :-:  |  :-:  |
@@ -50,6 +52,7 @@ Tests are done on small data set (305 books) with an index on City name in the C
 |Results            | 219   | 219   |219    | 219   |  219  |
 
 `db.Books.find({cities:"Of"}, { title: 1, author: 1 })`
+`MATCH (c:City) WHERE c.name = "Of" RETURN c;`
 
 | Tests - "Of"     | Run 1 | Run 2 | Run 3 | Run 4 | Run 5 |
 | :-:               |:-:    | :-:   |:-:    |  :-:  |  :-:  |
@@ -58,6 +61,7 @@ Tests are done on small data set (305 books) with an index on City name in the C
 |Results            | 194   | 194   |194    | 194   |  194  |
 
 `db.Books.find({cities:"Preston"}, { title: 1, author: 1 })`
+`MATCH (c:City) WHERE c.name = "Preston" RETURN c;`
 
 | Tests - "Preston" | Run 1 | Run 2 | Run 3 | Run 4 | Run 5 |
 | :-:               |:-:    | :-:   |:-:    |  :-:  |  :-:  |
@@ -66,6 +70,7 @@ Tests are done on small data set (305 books) with an index on City name in the C
 |Results            | 16    | 16    |16     | 16    |  16   |
 
 `db.Books.find({cities:"Frascati"}, { title: 1, author: 1 })`
+`MATCH (c:City) WHERE c.name = "Frascati" RETURN c;`
 
 | Tests - "Frascati"| Run 1 | Run 2 | Run 3 | Run 4 | Run 5 |
 | :-:               |:-:    | :-:   |:-:    |  :-:  |  :-:  |
