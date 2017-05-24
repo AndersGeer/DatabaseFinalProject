@@ -27,14 +27,14 @@ public class City {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        String oneLine = "";
 
         sb.append(getName().trim());
+        /*
         sb.append(CSV_SEPERATOR);
         sb.append(getLatitude().trim());
         sb.append(CSV_SEPERATOR);
         sb.append(getLongitude().trim());
-
+        */
         return sb.toString();
     }
 }

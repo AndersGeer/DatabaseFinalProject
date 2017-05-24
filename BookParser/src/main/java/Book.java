@@ -18,11 +18,11 @@ public class Book {
     }
 
     public String getTitle() {
-        return title;
+        return title.replace("\"", "'");
     }
 
     public String getAuthor() {
-        return author;
+        return author.replace("\"", "'");
     }
 
     public Collection<City> getCities() {
@@ -57,19 +57,48 @@ public class Book {
 
     @Override
     public String toString() {
+        City[] arr = getCities().toArray(new City[getCities().size()]);
         StringBuilder sb = new StringBuilder();
-        String oneLine = "";
-        sb.append("[");
         sb.append("\"" + getTitle().trim()+ "\"");
         sb.append(CSV_SEPERATOR);
         sb.append("\"" + getAuthor().trim()+ "\"");
-        sb.append(CSV_SEPERATOR);
-
-        for (City c:cities){
-            sb.append("\"" + c.toString().trim() + "\"");
+        if (arr.length != 0) {
             sb.append(CSV_SEPERATOR);
+
+
+            for (int i = 0; i < arr.length; i++) {
+                sb.append("\"" + arr[i].toString().trim() + "\"");
+
+                if (i == arr.length) {
+                    sb.append(CSV_SEPERATOR);
+                }
+            }
         }
-        sb.append("]");
+
+
+        return sb.toString();
+    }
+
+    public String toMongoString() {
+        City[] arr = getCities().toArray(new City[getCities().size()]);
+        StringBuilder sb = new StringBuilder();
+        sb.append("\"" + getTitle().trim()+ "\"");
+        sb.append(CSV_SEPERATOR);
+        sb.append("\"" + getAuthor().trim()+ "\"");
+        if (arr.length != 0) {
+            sb.append(CSV_SEPERATOR);
+            sb.append("\"");
+            for (int i = 0; i < arr.length; i++) {
+                sb.append(arr[i].toString().trim());
+
+                if (i != arr.length-1) {
+                    sb.append(".");
+                }
+            }
+            sb.append("\"");
+        }
+
+
         return sb.toString();
     }
 }

@@ -101,7 +101,7 @@ public class main {
     }
 
     private void InitWriter() throws FileNotFoundException, UnsupportedEncodingException {
-        writer = new PrintWriter("BookParser/Output/data.csv", "UTF-8");
+        writer = new PrintWriter("BookParser/Output/dataTest.csv", "UTF-8");
         StringBuilder sb = new StringBuilder();
         sb.append("title");
         sb.append(",");
@@ -122,8 +122,8 @@ public class main {
                 LineParsing(line, book);
                 line = br.readLine();
             }
-            System.out.println(book);
-            String bookLine = book.toString().replace(",]","]");
+            System.out.println(book.toMongoString());
+            String bookLine = book.toMongoString().replace("\"\"","\",\"");
             writer.println(bookLine);
         }
 
