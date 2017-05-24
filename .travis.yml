@@ -6,4 +6,4 @@ notifications:
   on_failure: always # default: always
 script:
   - cd DbApp
-  - mvn verify
+  - mvn test
