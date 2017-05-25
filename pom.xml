@@ -30,7 +30,7 @@
                 <version>2.20</version>
                 <configuration>
                     <includes>
-                        <include>**/*Test*.java</include>
+                        <include>/DbApp/src/test/java/*.java</include>
                     </includes>
                 </configuration>
             </plugin>
