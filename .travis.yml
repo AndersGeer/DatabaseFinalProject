@@ -4,7 +4,7 @@ script:
   - cd DbApp
   - mvn install -DskipTests=false -Dmaven.javadoc.skip=true -B -V
   - mvn verify
-  - mvn test
+  - mvn surefure:test
 install: true
 notifications:
  email:
