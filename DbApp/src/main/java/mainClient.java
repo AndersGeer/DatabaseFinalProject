@@ -1,5 +1,4 @@
 import Exceptions.InputException;
-import Workers.CitySearch;
 import asg.cliche.Command;
 import asg.cliche.Param;
 
@@ -11,7 +10,7 @@ public class mainClient {
     @Command(description="Searches a city name to find all books and their authors mentioning that city")
     public void citySearch (@Param(name="City Name") String city) throws InputException {
         //TODO:
-        CitySearch citySearch = new CitySearch(city,"helo","ff");
+        //CitySearch citySearch = new CitySearch(city,"FinalDatabaseProject","Books");
     }
 
     //Commands
@@ -19,6 +18,7 @@ public class mainClient {
     public void titleSearch (@Param(name="Book Title") String title)
     {
         //TODO:
+        
     }
 
     //Commands
