@@ -1,7 +1,9 @@
 language: java
 jdk: oraclejdk8
 script:
-  - mvn surefire:test
+  - cd DbApp
+  - mvn install
+  - mvn test
 install: true
 notifications:
  email:
