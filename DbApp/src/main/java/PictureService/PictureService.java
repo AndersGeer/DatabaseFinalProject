@@ -1,4 +1,4 @@
-package GoogleAPI;
+package PictureService;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -9,12 +9,13 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 
 /**
  * Created by MJPS on 23/05/2017.
  */
-public class GoogleAPI {
+public class PictureService implements IService{
 	
 	private final String LOG_TAG = "DbTestProject";
 	
@@ -31,9 +32,71 @@ public class GoogleAPI {
 	
 	private final String API_KEY = "AIzaSyCSrSediuHzqqIbZC5JUvAEzEjiP9FDd8c";
 	
+	
+	private String lat;
+	private String lng;
+	
+	public String getLat() {
+		return lat;
+	}
+	
+	public String getLng() {
+		return lng;
+	}
+	
+	private void setLat(String lat) {
+		this.lat = lat;
+	}
+	
+	private void setLng(String lng) {
+		this.lng = lng;
+	}
+	
+	//Dependency injection for constructor
+	private StringBuilder sb;
+	private InputStream is;
+	private InputStreamReader in;
+	private OutputStream os;
+	private HttpURLConnection connection;
+	
+	//Dependency injection Setter
+	private URL url;
+	
+	public void setUrl(String url) throws MalformedURLException {
+		if (url == null) {
+			throw new InvalidParameterException("url must not be null");
+		}
+		this.url = new URL(url);
+	}
+	public URL getUrl(){return url;}
+	
+	
+	
 	/**
+	 * Constructor for getPictureFromLatLng
+	 * @param sb, Stringbuilder that will append Strings (eg. https://maps.googleapis.com/maps...)
+	 * @param is, Input stream for reading from the URL connection.
+	 * @param os, Creates a file output stream to write to the file with the
 	 * @param lat, latitude
 	 * @param lng, longitude
+	 * specified name
+	 *
+	 * */
+	public PictureService(StringBuilder sb, InputStream is, OutputStream os, String lat, String lng) throws FileNotFoundException {
+		this.sb = sb;
+		this.is = is;
+		
+		if ((lat.length() != 0 || lat != "") && ( lng.length() != 0  || lng != "")) {
+			setLat(lat);
+			setLng(lng);
+			this.os = new FileOutputStream(lat+" "+lng+".png");
+		} else {
+			throw new FileNotFoundException("cannot create file, if lat and lng is null/empty");
+		}
+		
+	}
+	
+	/**
 	 * @param zoom, the amount of detail needed:
 	 *              1 = World
 	 *              5 = Landmass/continent
@@ -43,24 +106,20 @@ public class GoogleAPI {
 	 * @param size, of the picture 640x640 is max for free.
 	 * @return {@link URL}, picture url for later processing.
 	 * */
-	public URL getAndSavePictureLatLng(String lat, String lng, int zoom, int size) {
+	public URL getPicture(int zoom, int size) {
 		
-		URL picUrl = null;
-		InputStream is;
-		OutputStream os;
 		
 		try {
 			
-			StringBuilder sb = new StringBuilder(STATIC_API_BASE);
+			sb.append(STATIC_API_BASE);
 			sb.append(TYPE_STATIC_MAP);
-			sb.append("center="+lat+","+lng);
+			sb.append("center="+getLat()+","+getLng());
 			sb.append("&zoom="+String.valueOf(zoom));
 			sb.append("&size="+size+"x"+size);
 			sb.append("&key=" + API_KEY);
 			
-			picUrl = new URL(sb.toString());
-			is = picUrl.openStream();
-			os = new FileOutputStream(lat+" "+lng+".png");
+			setUrl(sb.toString());
+			is = getUrl().openStream();
 			
 			byte[] b = new byte[2048];
 			int length;
@@ -71,33 +130,54 @@ public class GoogleAPI {
 			
 			is.close();
 			os.close();
+			
 		} catch (IOException e) {
 			System.out.println("Error processing URL");
 			System.out.printf(e.toString());
 		}
 		
-		return picUrl;
+		return url;
 	}
 	
-	public ArrayList<Place> reverseGeocode(String lat, String lng) {
-		ArrayList<Place> resultList = null;
+	
+	/**
+	 * Constructor for reverseGeocode
+	 * @param sb, Stringbuilder that will append Strings (eg. https://maps.googleapis.com/maps...)
+	 * @param connection, instance is used to make a single request
+	 * @param in, an input stream that reads from an open connection
+	 *
+	 * */
+	public PictureService(StringBuilder sb, HttpURLConnection connection, InputStreamReader in) {
+		this.sb = sb;
+		this.connection = connection;
+		this.in = in;
+	}
 		
-		HttpURLConnection connection = null;
+	/**
+	 * Returns an arraylist of places that is based on latitude and longitude and reverse geocode it
+	 * @param lat, latitude
+	 * @param lng, longitude
+	 *
+	 * @return {@link ArrayList<Place>}
+	 * */
+	public ArrayList<Place> reverseGeocode(String lat, String lng) {
+		
+		//a seperate stringbuilder to hold values from json
 		StringBuilder results = new StringBuilder();
 		
 		
 		try {
 			
-			StringBuilder sb = new StringBuilder(GEOCODE_API_BASE);
+			sb.append(GEOCODE_API_BASE);
 			sb.append(TYPE_RGEOCODE);
 			sb.append(OUT_JSON);
 			sb.append("&latlng=" + lat + "," + lng);
 			sb.append("&key=" + API_KEY);
 			
-			URL url = new URL(sb.toString());
-			connection = (HttpURLConnection) url.openConnection();
+			setUrl(sb.toString());
+			connection = (HttpURLConnection) getUrl().openConnection();
 			
-			InputStreamReader in = new InputStreamReader(connection.getInputStream());
+			in = new InputStreamReader(connection.getInputStream());
 			
 			int read;
 			char[] buff = new char[1024];
@@ -118,6 +198,7 @@ public class GoogleAPI {
 			}
 		}
 		
+		ArrayList<Place> resultList = null;
 		Place place;
 		try {
 			//Creating JSON object hierarchy
@@ -144,15 +225,13 @@ public class GoogleAPI {
 	}
 	
 	public ArrayList<Place> search(String keyword, String lat, String lng, int radius) {
-		ArrayList<Place> resultList = null;
-		
 		HttpURLConnection connection = null;
 		StringBuilder results = new StringBuilder();
 		
 		
 		try {
 			
-			StringBuilder sb = new StringBuilder(PLACES_API_BASE);
+			sb.append(PLACES_API_BASE);
 			sb.append(TYPE_SEARCH);
 			sb.append(OUT_JSON);
 			sb.append("&location=" + lat + "," + lng);
@@ -160,10 +239,10 @@ public class GoogleAPI {
 			sb.append("&keyword=" + URLEncoder.encode(keyword, "utf8"));
 			sb.append("&key=" + API_KEY);
 			
-			URL url = new URL(sb.toString());
+			setUrl(sb.toString());
 			connection = (HttpURLConnection) url.openConnection();
 			
-			InputStreamReader in = new InputStreamReader(connection.getInputStream());
+			in = new InputStreamReader(connection.getInputStream());
 			
 			int read;
 			char[] buff = new char[1024];
@@ -184,7 +263,7 @@ public class GoogleAPI {
 			}
 		}
 		
-		
+		ArrayList<Place> resultList = null;
 		try {
 			//Creating JSON object hierarchy
 			JSONObject jsObject = new JSONObject(results.toString());
@@ -210,23 +289,21 @@ public class GoogleAPI {
 	}
 	
 	public Place details(String reference) {
-		HttpURLConnection connection = null;
+		
 		StringBuilder results = new StringBuilder();
-		
-		
 		try {
 			
-			StringBuilder sb = new StringBuilder(PLACES_API_BASE);
+			sb.append(PLACES_API_BASE);
 			sb.append(TYPE_DETAILS);
 			sb.append(OUT_JSON);
 			sb.append("?sensor=false");
 			sb.append("&key=" + API_KEY);
 			sb.append("&reference=" + URLEncoder.encode(reference, "utf8"));
 			
-			URL url = new URL(sb.toString());
+			setUrl(sb.toString());
 			connection = (HttpURLConnection) url.openConnection();
 			
-			InputStreamReader in = new InputStreamReader(connection.getInputStream());
+			in = new InputStreamReader(connection.getInputStream());
 			
 			int read;
 			char[] buff = new char[1024];

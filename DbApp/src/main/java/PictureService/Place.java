@@ -1,4 +1,4 @@
-package GoogleAPI;
+package PictureService;
 
 /**
  * Created by MJPS on 23/05/2017.
