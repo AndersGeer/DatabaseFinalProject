@@ -3,8 +3,7 @@ jdk: oraclejdk8
 script:
   - cd DbApp
   - mvn install -DskipTests=false -Dmaven.javadoc.skip=true -B -V
-  - mvn verify
-  - mvn surefure:test
+  - "mvn test && mvn verify"
 install: true
 notifications:
  email:
