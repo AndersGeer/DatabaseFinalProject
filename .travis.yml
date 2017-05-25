@@ -1,8 +1,8 @@
 language: java
 jdk: oraclejdk8
 script:
-  - mvn clean install -DskipTests=false -Dmaven.javadoc.skip=true -B -V
-  - mvn test
+  - mvn install -DskipTests=false -Dmaven.javadoc.skip=true -B -V
+  - mvn verify
 install: true
 notifications:
  email:
