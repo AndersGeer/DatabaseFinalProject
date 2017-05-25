@@ -1,6 +1,6 @@
+package Workers;
+
 import Exceptions.InputException;
-import Workers.CitySearch;
-import Workers.IWorker;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.MongoTimeoutException;
@@ -10,7 +10,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 
-public class CitySearchTestsLong {
+public class CitySearchLongTest {
     IWorker worker = null;
 
     @Test(expected = MongoTimeoutException.class)
