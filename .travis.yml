@@ -3,8 +3,7 @@ jdk: oraclejdk8
 script:
   - cd DbApp
   - mvn install -DskipTests=false -Dmaven.javadoc.skip=true -B -V
-  - mvn Dtest=CitySearchTest test
-  - mvn Dtest=CitySearchLongTest test
+  - mvn test
 install: true
 notifications:
  email:
