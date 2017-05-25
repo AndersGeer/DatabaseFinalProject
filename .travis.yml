@@ -9,3 +9,4 @@ env:
 script:
   - cd $TEST_DIR
   - mvn test
+  - mvn install -DskipTests=false -Dmaven.javadoc.skip=true -B -V
