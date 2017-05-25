@@ -1,6 +1,6 @@
-package Workers;
-
 import Exceptions.InputException;
+import Workers.CitySearch;
+import Workers.IWorker;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.MongoTimeoutException;

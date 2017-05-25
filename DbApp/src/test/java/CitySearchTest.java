@@ -1,5 +1,3 @@
-package Workers;
-
 import Exceptions.InputException;
 import Workers.CitySearch;
 import Workers.IWorker;
