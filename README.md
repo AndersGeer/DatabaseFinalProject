@@ -64,6 +64,7 @@ return c`
 | neo4j             | 1ms   | 4ms   |  4ms  |4ms    |  1ms  |
 |Results MongoDb    | 194   | 194   |194    | 194   |  194  |
 |Results Neo4J      | 63    | 63    |63     | 63    |  63   |
+
 `db.Books.find({cities:"Preston"}, { title: 1, author: 1 })`
 `MATCH (:Book)-[:MENTIONS]-(c:City) WHERE c.name = "Preston"
 return c`
@@ -107,6 +108,71 @@ Not applicable, for automation, slowness of user moving data from RoboMongo to o
 Given this document, we can then extract the city data and query our City collection for lat and lng
 `db.City.find({name:"-CityName-"},{lat:1, lng:1})`
 Returns latitude and longitude to be passed on to our connection to the google API for map generation.
+
+**Cypher**: `MATCH (b:Book)-[:MENTIONS]-(c:City) WHERE b.title = "White Queen of the Cannibals: The Story of Mary Slessor"
+return c`
+
+| Tests - "White Queen of the Cannibals: The Story of Mary Slessor"| Run 1 | Run 2 | Run 3 | Run 4 | Run 5 |
+| :-:               |:-:    | :-:   |:-:    |  :-:  |  :-:  |
+| MongoDb           | ms    | ms    |  ms   |ms     |  ms   |
+| neo4j             | 1ms   | 2ms   |  4ms  |1ms    |  1ms  |
+|Results MongoDb    |       |       |       |       |       |
+|Results Neo4J      | 6     | 6     |6      | 6     |  6    |
+
+**Cypher**: `MATCH (b:Book)-[:MENTIONS]-(c:City) WHERE b.title = "The Way of Peace"
+return c`
+
+| Tests - "The Way of Peace"| Run 1 | Run 2 | Run 3 | Run 4 | Run 5 |
+| :-:               |:-:    | :-:   |:-:    |  :-:  |  :-:  |
+| MongoDb           | ms    | ms    |  ms   |ms     |  ms   |
+| neo4j             | 1ms   | 4ms   |  1ms  |1ms    |  1ms  |
+|Results MongoDb    |       |       |       |       |       |
+|Results Neo4J      | 5     | 5     |5      | 5     |  5    |
+
+**Cypher**: `MATCH (b:Book)-[:MENTIONS]-(c:City) WHERE b.title = "The Anatomy of Melancholy"
+return c`
+
+| Tests - "The Anatomy of Melancholy"| Run 1 | Run 2 | Run 3 | Run 4 | Run 5 |
+| :-:               |:-:    | :-:   |:-:    |  :-:  |  :-:  |
+| MongoDb           | ms    | ms    |  ms   |ms     |  ms   |
+| neo4j             | 1ms   | 4ms   |  1ms  |1ms    |  1ms  |
+|Results MongoDb    |       |       |       |       |       |
+|Results Neo4J      | 1     | 1     |1      | 1     |  1    |
+
+**Cypher**: `MATCH (b:Book)-[:MENTIONS]-(c:City) WHERE b.title = "Sea-Power and Other Studies"
+return c`
+
+| Tests - "Sea-Power and Other Studies"| Run 1 | Run 2 | Run 3 | Run 4 | Run 5 |
+| :-:               |:-:    | :-:   |:-:    |  :-:  |  :-:  |
+| MongoDb           | ms    | ms    |  ms   |ms     |  ms   |
+| neo4j             | 4ms   | 1ms   |  2ms  |1ms    |  4ms  |
+|Results MongoDb    |       |       |       |       |       |
+|Results Neo4J      | 10    | 10    |10     | 10    |  10   |
+---
+**Cypher**: `MATCH (b:Book)-[:MENTIONS]-(c:City) WHERE b.title = "With Kelly to Chitral"
+return c`
+
+| Tests - "With Kelly to Chitral"| Run 1 | Run 2 | Run 3 | Run 4 | Run 5 |
+| :-:               |:-:    | :-:   |:-:    |  :-:  |  :-:  |
+| MongoDb           | ms    | ms    |  ms   |ms     |  ms   |
+| neo4j             | 1ms   | 1ms   |  2ms  |1ms    |  2ms  |
+|Results MongoDb    |       |       |       |       |       |
+|Results Neo4J      | 3     | 3     |3      | 3     |  3    |
+
+Averages:
+
+| Tests     | "White Queen..."    | "The Way..."     | "The Anatomy..."  |"Sea-Power..."  |"With Kelly..." |
+| :-:       |:-:            | :-:       |:-:    |:-:        |:-:        |
+| MongoDb   | ms            | ms        |ms     |ms         |ms         |
+| neo4j     | 1.8ms         | 1.6ms     |1.6ms  |2.4ms      |1.4ms      |
+
+Medians:
+
+| Tests     | "White Queen..."    | "The Way..."     | "The Anatomy..."  |"Sea-Power..."  |"With Kelly..." |
+| :-:       |:-:            | :-:       |:-:    |:-:        |:-:        |
+| MongoDb   | ms            | ms        |ms     |ms         |ms         |
+| neo4j     | 1ms           | 1ms       |1ms    |2ms        |1ms        |
+
 
 ### Query 3:
 Similarly combines Query 1 and 2 somewhat.
