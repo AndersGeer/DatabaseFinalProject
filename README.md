@@ -34,48 +34,55 @@ Please note all mongo tests are run through RoboMongo, as the server would refus
 Tests are done on small data set (305 books) with an index on City name in the City collection
 
 `db.Books.find({cities:"New York"}, { title: 1, author: 1 })`
-`MATCH (c:City) WHERE c.name = "New York" RETURN c;`
+`MATCH (:Book)-[:MENTIONS]-(c:City) WHERE c.name = "New York"
+return c`
 
 | Tests - "New York"| Run 1 | Run 2 | Run 3 | Run 4 | Run 5 |
 | :-:               |:-:    | :-:   |:-:    |  :-:  |  :-:  |
 | MongoDb           | 26ms  | 25ms  |  28ms |25ms   |  26ms |
-| neo4j             |       |       |       |       |       |
+| neo4j             | 1ms   | 1ms   |  1ms  |1ms    |  1ms  |
 |Results            | 0     | 0     |0      | 0     |  0    |
 
 `db.Books.find({cities:"God"}, { title: 1, author: 1 })`
-`MATCH (c:City) WHERE c.name = "God" RETURN c;`
+`MATCH (:Book)-[:MENTIONS]-(c:City) WHERE c.name = "God"
+return c`
 
 | Tests - "God"     | Run 1 | Run 2 | Run 3 | Run 4 | Run 5 |
 | :-:               |:-:    | :-:   |:-:    |  :-:  |  :-:  |
 | MongoDb           | 54ms  | 52ms  |  51ms |52ms   |  52ms |
-| neo4j             |       |       |       |       |       |
-|Results            | 219   | 219   |219    | 219   |  219  |
+| neo4j             | 1ms   | 1ms   |  4ms  |1ms    |  1ms  |
+|Results MongoDb    | 219   | 219   |219    | 219   |  219  |
+|Results Neo4J      | 163   | 163   |163    | 163   |  163  |
 
 `db.Books.find({cities:"Of"}, { title: 1, author: 1 })`
-`MATCH (c:City) WHERE c.name = "Of" RETURN c;`
+`MATCH (:Book)-[:MENTIONS]-(c:City) WHERE c.name = "Of"
+return c`
 
 | Tests - "Of"     | Run 1 | Run 2 | Run 3 | Run 4 | Run 5 |
 | :-:               |:-:    | :-:   |:-:    |  :-:  |  :-:  |
 | MongoDb           | 52ms  | 52ms  |  56ms |54ms   |  51ms |
-| neo4j             |       |       |       |       |       |
-|Results            | 194   | 194   |194    | 194   |  194  |
-
+| neo4j             | 1ms   | 4ms   |  4ms  |4ms    |  1ms  |
+|Results MongoDb    | 194   | 194   |194    | 194   |  194  |
+|Results Neo4J      | 63    | 63    |63     | 63    |  63   |
 `db.Books.find({cities:"Preston"}, { title: 1, author: 1 })`
-`MATCH (c:City) WHERE c.name = "Preston" RETURN c;`
+`MATCH (:Book)-[:MENTIONS]-(c:City) WHERE c.name = "Preston"
+return c`
 
 | Tests - "Preston" | Run 1 | Run 2 | Run 3 | Run 4 | Run 5 |
 | :-:               |:-:    | :-:   |:-:    |  :-:  |  :-:  |
 | MongoDb           | 27ms  | 27ms  |  37ms |27ms   |  28ms |
-| neo4j             |       |       |       |       |       |
-|Results            | 16    | 16    |16     | 16    |  16   |
+| neo4j             | 1ms   | 4ms   |  1ms  |4ms    |  1ms  |
+|Results MongoDb    | 16    | 16    |16     | 16    |  16   |
+|Results Neo4J      | 4     | 4     |4      | 4     |  4    |
 
 `db.Books.find({cities:"Frascati"}, { title: 1, author: 1 })`
-`MATCH (c:City) WHERE c.name = "Frascati" RETURN c;`
+`MATCH (:Book)-[:MENTIONS]-(c:City) WHERE c.name = "Frascati"
+return c`
 
 | Tests - "Frascati"| Run 1 | Run 2 | Run 3 | Run 4 | Run 5 |
 | :-:               |:-:    | :-:   |:-:    |  :-:  |  :-:  |
 | MongoDb           | 28ms  | 26ms  |  25ms |27ms   |  26ms |
-| neo4j             |       |       |       |       |       |
+| neo4j             | 1ms   | 1ms   |  1ms  |1ms    |  1ms  |
 |Results            | 1     | 1     |1      | 1     |  1    |
 
 Averages:
@@ -83,14 +90,14 @@ Averages:
 | Tests     | "New York"    | "God"     | "Of"  |"Preston"  |"Frascati" |
 | :-:       |:-:            | :-:       |:-:    |:-:        |:-:        |
 | MongoDb   | 26ms          | 52.2ms    |53ms   |29.2ms     |26.4ms     |
-| neo4j     |               |           |       |           |           |
+| neo4j     | 1ms           | 1.6ms     |2.8ms  |2.2ms      |1ms        |
 
 Medians:
 
 | Tests     | "New York"    | "God"     | "Of"  |"Preston"  |"Frascati" |
 | :-:       |:-:            | :-:       |:-:    |:-:        |:-:        |
 | MongoDb   | 26ms          | 52ms      |52ms   |27ms       |26ms       |
-| neo4j     |               |           |       |           |           |
+| neo4j     | 1ms           | 1ms       |4ms    |1ms        |1ms        |
 
 ### Query 2: 
 
