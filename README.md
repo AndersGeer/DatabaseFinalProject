@@ -257,7 +257,7 @@ One way of doing it in mongodb
 
 ## Descriptions
 
-**Design**
+### **Design**
 
 Neo4J Graph/datamodel
 
@@ -281,15 +281,30 @@ CREATE (b)-[m:MENTIONS]->(c)
 RETURN m
 ```
 
-*Importing to Neo4J*
-We had some issues connecting through Neo4J Droplet and getting access to its local Database, this prevented us from running our Query’s, but everything should be able to run if you get a connection to the Droplet, following the below files and instructions:
-
+### **Importing to Neo4J**:
+We had some issues connecting through Neo4J Droplet and getting access to its local Database, this prevented us from running our Query’s _online_, but everything we measured was local, both mongodb and neo4j ran locally on our PC's just for good measure, since request/response from the DB's online would show inconsistent measurements if 1 of the databases were online.
 CSV files needed
 	 * bookMentionsCityFinal.csv
 	 * booksFinal.csv
 	 * citiesFinal.csv
 
-We chose to import the data through a Batch, since we were expecting to retrieve a dataset with over 100k+ nodes and relations. And neo4J allows through the Batch to import data very fast, the tool is located in /pathToNeo4J/bin/neo4J-import (/please NOTE: that the neo4j-import will be deprecated and neo4j-admin import will be used instead/) and is used as follows: 
+#### Creating the Book nodes fron _booksFinal.csv_: 
+`LOAD CSV WITH HEADERS FROM "file:///citiesFinal.csv" AS line
+CREATE (:Book {id: tointeger(line.bookid), title: line.title, lat: line.lat, lng: line.lng })
+`
+
+#### Creating the City nodes fron _citiesFinal.csv_: 
+`LOAD CSV WITH HEADERS FROM "file:///citiesFinal.csv" AS line
+CREATE (:City {id: tointeger(line.cityid), name: line.name, author: line. })
+`
+
+#### Create the **Relationships** from the _bookMentionsCityFinal.csv_:
+`LOAD CSV WITH HEADERS FROM "file:///bookMentionsCityFinal.csv" AS line
+MATCH (b:Book {id: line.bookid})
+MATCH (c:City {id: line.cityid})
+MERGE (b)-[:MENTIONS]->(c)`
+
+Although we chose to use Cypher giving us: **781** nodes and **1305** relationships. This could also be done through a Batch script, if large datasets are used. We were planning to use a dataset with over 100k+ nodes and relations, but sadly we did not have time to implement everything. But, if needed, the batch imports data very quick and neo4J allows it through the shown script: (/please NOTE: the tool is located in /pathToNeo4J/bin/neo4J-import, that the neo4j-import will be deprecated and neo4j-admin import will be used instead/) and is used as follows: 
 ```
 neo4j-import --into data/databases/graph.db 
 --nodes import/booksFinal.csv 
@@ -297,7 +312,6 @@ neo4j-import --into data/databases/graph.db
 --relationships:MENTIONS import/bookMentionsCityFinal.csv
 ```
 
-Since time wasn’t on our side, we sadly are a bit disappointed with the issues in Neo4j we got during the project. Else aside, as mentioned earlier, if you have a connection and the correct csv files, correctly formatted and structured, this will work!
 
 - MongoDB datamodel - Book
 
@@ -348,7 +362,20 @@ id,name,lat,lng
 
 These files allowed us to create the collecitons easily after a quick splitting of city names with a script on the books data - this was done after deleting all entries without any known cities mentioned or the script would fail - and these books are reasonably boring to have in the database, and could give problems later as well.
 
-**Implementation**
+
+##Neo4j vs. Mongodb
+### Neo4J
+Is a Graph database, that builds upon a graph model with labeled Nodes, connections(directed) & typed relationships. Both nodes and relationships, work like a Key-value pair, making it easy to navigate. Also the representation of the database through nodes and its relationships, is easy to understand for both Developer and Stakeholders to understand the Diagram.
+The query language for Neo4j "Cypher" is easy to understand and has the same WHERE,FROM,AND,IN ... Keywords that we know from RDBMS. Neo4j shines when it comes to following relavant relationships to accumulate interesting results.
+
+### MongoDb
+Generally we felt like that Mongo should be used when you expect a **High Write Load**, since it actually by default preresr high _insert_ rates. Also common MySQL tables reaching 5-10 GB or over per table, you need to partition your data and shard your database, MongoDb has a built in solution for that. Also one of the strength of Mongo that we felt was a good factor in the comparison to Neo4J, was that its **Schema-less**, adding a new field, does not affect old rows or Documents.
+
+### Conclusion
+We do not think there is a best solution for this project, since it all comes down to how efficient your data is build, but following our query results, when it comes to datasets that is not that large, Neo4J beats MongoDb, but the other way around Neo4j Struggles, and it all comes down to how Contraints and Indexes are designed! As for mongoDb, we find it hard to create complex quiries like in Neo4J, but that may be because of our time contraints
+
+
+**EXTRA: Implementation of different methods inside&Outside our project**
 - Use [Google Places API](https://developers.google.com/places/web-service/get-api-key) to retrieve an image from latitude, longitude and radius.
 - Function that compares the extracted strings from txt’s to CSV (Common data format)
 
