@@ -180,6 +180,76 @@ Similarly combines Query 1 and 2 somewhat.
 To send on cities to our City collection and thus get latitude and longitude
 `db.City.find({name:"-CityName-"},{lat:1, lng:1})`
 
+
+**Cypher**: `MATCH (b:Book),(c:City) WHERE b.author = "Annie E. Keeling"
+MATCH (b)-[:MENTIONS]-(c)
+return b,c`
+
+| Tests - "Annie E. Keeling"| Run 1 | Run 2 | Run 3 | Run 4 | Run 5 |
+| :-:               |:-:    | :-:   |:-:    |  :-:  |  :-:  |
+| MongoDb           | ms    | ms    |  ms   |ms     |  ms   |
+| neo4j             | 1ms   | 1ms   |  1ms  |4ms    |  1ms  |
+|Results MongoDb    |       |       |       |       |       |
+|Results Neo4J      | 3     | 3     |3      | 3     |  3    |
+
+**Cypher**: `MATCH (b:Book),(c:City) WHERE b.author = "Leigh Hunt"
+MATCH (b)-[:MENTIONS]-(c)
+return b,c`
+
+| Tests - "Leigh Hunt"| Run 1 | Run 2 | Run 3 | Run 4 | Run 5 |
+| :-:               |:-:    | :-:   |:-:    |  :-:  |  :-:  |
+| MongoDb           | ms    | ms    |  ms   |ms     |  ms   |
+| neo4j             | 1ms   | 1ms   |  4ms  |1ms    |  4ms  |
+|Results MongoDb    |       |       |       |       |       |
+|Results Neo4J      | 5     | 5     |5      | 5     |  5    |
+
+**Cypher**: `MATCH (b:Book),(c:City) WHERE b.author = "Various"
+MATCH (b)-[:MENTIONS]-(c)
+return c`
+
+| Tests - "Various"| Run 1 | Run 2 | Run 3 | Run 4 | Run 5 |
+| :-:               |:-:    | :-:   |:-:    |  :-:  |  :-:  |
+| MongoDb           | ms    | ms    |  ms   |ms     |  ms   |
+| neo4j             | 3ms   | 4ms   |  4ms  |4ms    |  4ms  |
+|Results MongoDb    |       |       |       |       |       |
+|Results Neo4J      | 148   | 148   |148    | 148   |  148  |
+
+**Cypher**: `MATCH (b:Book),(c:City) WHERE b.author = "Zane Grey"
+MATCH (b)-[:MENTIONS]-(c)
+return c`
+
+| Tests - "Zane Grey"| Run 1 | Run 2 | Run 3 | Run 4 | Run 5 |
+| :-:               |:-:    | :-:   |:-:    |  :-:  |  :-:  |
+| MongoDb           | ms    | ms    |  ms   |ms     |  ms   |
+| neo4j             | 1ms   | 1ms   |  1ms  |1ms    |  1ms  |
+|Results MongoDb    |       |       |       |       |       |
+|Results Neo4J      | 4     | 4     |4      | 4     |  4    |
+---
+**Cypher**: `MATCH (b:Book),(c:City) WHERE b.author = "Editor-in-Chief: Rossiter Johnson"
+MATCH (b)-[:MENTIONS]-(c)
+return c`
+
+| Tests - "Editor-in-Chief: Rossiter Johnson"| Run 1 | Run 2 | Run 3 | Run 4 | Run 5 |
+| :-:               |:-:    | :-:   |:-:    |  :-:  |  :-:  |
+| MongoDb           | ms    | ms    |  ms   |ms     |  ms   |
+| neo4j             | 1ms   | 4ms   |  1ms  |4ms    |  1ms  |
+|Results MongoDb    |       |       |       |       |       |
+|Results Neo4J      | 39    | 39    |39     | 39    |  39    |
+
+Averages:
+
+| Tests     | "Annie E. Keeling"    | "Leigh Hunt"     | "Various"  |"Zane Grey"  |"Editor-in-Chief: Rossiter Johnson" |
+| :-:       |:-:            | :-:       |:-:    |:-:        |:-:        |
+| MongoDb   | ms            | ms        |ms     |ms         |ms         |
+| neo4j     | 1ms           | 2.2ms     |3.8ms  |2.4ms      |2.2ms      |
+
+Medians:
+
+| Tests     | "Annie E. Keeling"    | "Leigh Hunt"     | "Various"  |"Zane Grey"  |"Editor-in-Chief: Rossiter Johnson" |
+| :-:       |:-:            | :-:       |:-:    |:-:        |:-:        |
+| MongoDb   | ms            | ms        |ms     |ms         |ms         |
+| neo4j     | 1.6ms         | 1ms       |4ms    |1ms        |1ms        |
+
 ### Query 4:
 One way of doing it in mongodb 
 `db.City.find({lat:{"$gt": ~(Lat-1)~}, lat:{"$lt": ~(Lat+1)~},lng:{"$gt": ~(lng-1)~},lng:{"$lt": ~(Lng+1)~}},{name:1})`
